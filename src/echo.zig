@@ -23,20 +23,27 @@ fn printString(writer: anytype, str: []const u8, interpret_escapes: bool) !void 
 
 pub fn main() !void {
     const stdout = std.io.getStdOut().writer();
-    const args = std.os.argv[1..]; 
+    const args = std.os.argv[1..]; // Skip program name (argv[0])
 
-    var newline = true; 
-    var escapes = false; 
+    var newline = true;    // Default: append newline
+    var spaces = true;     // Default: separate arguments with spaces
+    var escapes = false;   // Default: disable interpretation of escapes (-E)
+
     var arg_index: usize = 0;
 
-    // Check for options
+    // Process options
     while (arg_index < args.len and args[arg_index][0] == '-') : (arg_index += 1) {
         const option = std.mem.span(args[arg_index]);
         if (std.mem.eql(u8, option, "-n")) {
             newline = false; // No newline
+        } else if (std.mem.eql(u8, option, "-s")) {
+            spaces = false;  // No spaces between arguments
         } else if (std.mem.eql(u8, option, "-e")) {
-            escapes = true; // Interpret escapes
+            escapes = true;  // Enable escapes
+        } else if (std.mem.eql(u8, option, "-E")) {
+            escapes = false; // Disable escapes (default)
         } else {
+            // Unknown option, treat as part of the string
             break;
         }
     }
@@ -45,8 +52,8 @@ pub fn main() !void {
     while (arg_index < args.len) : (arg_index += 1) {
         const arg = std.mem.span(args[arg_index]);
         try printString(stdout, arg, escapes);
-        if (arg_index < args.len - 1) {
-            try stdout.writeByte(' '); // Space between arguments
+        if (spaces and arg_index < args.len - 1) {
+            try stdout.writeByte(' '); // Space between arguments if -s is not set
         }
     }
 
