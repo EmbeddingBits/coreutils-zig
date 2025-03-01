@@ -5,7 +5,6 @@ pub fn main() !void {
     _ = args.next(); // Skip the program name
 
     var total_nanoseconds: u64 = 0;
-    var allocator = std.heap.page_allocator;
 
     while (args.next()) |arg| {
         const flag = arg;
