@@ -18,7 +18,7 @@ pub fn main() !void {
     var line_buffer: [1024]u8 = undefined;
     while (try reader.readUntilDelimiterOrEof(&line_buffer, '\n')) |line| {
         // Split the line into fields (format: name:password:uid:gid:gecos:home:shell)
-        var fields = std.mem.split(u8, line, ":");
+        var fields = std.mem.splitSequence(u8, line, ":");
         const username = fields.next() orelse continue; // First field: username
         _ = fields.next(); // Skip password field
         const uid_str = fields.next() orelse continue; // Third field: UID

@@ -23,11 +23,11 @@ fn printString(writer: anytype, str: []const u8, interpret_escapes: bool) !void 
 
 pub fn main() !void {
     const stdout = std.io.getStdOut().writer();
-    const args = std.os.argv[1..]; // Skip program name (argv[0])
+    const args = std.os.argv[1..];
 
-    var newline = true;    // Default: append newline
-    var spaces = true;     // Default: separate arguments with spaces
-    var escapes = false;   // Default: disable interpretation of escapes (-E)
+    var newline = true;    
+    var spaces = true;     
+    var escapes = false;   
 
     var arg_index: usize = 0;
 
